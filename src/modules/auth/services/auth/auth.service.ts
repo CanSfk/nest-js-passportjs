@@ -35,6 +35,8 @@ export class AuthService {
   }
 
   validateUser(username: string, password: string) {
+    console.log('Inside validate user auth.service');
+
     const user = this.getUserByName(username);
 
     if (user && user.password === password) return user;

@@ -8,8 +8,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService, User } from '../../services/auth/auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
+import { LocalAuthGuard } from '../../utils/local.auth.guard';
+import { AuthenticatedGuard } from '../../utils/authenticated.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -27,9 +28,18 @@ export class AuthController {
     return this.authService.getUserByName(username);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('user/login')
   login(@Req() req: Request) {
     return req.user;
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('user/profile')
+  profile(@Req() req: Request) {
+    return {
+      msg: 'You an authorized user',
+      user: req.user,
+    };
   }
 }
